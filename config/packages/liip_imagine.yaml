@@ -1,8 +1,8 @@
 liip_imagine:
-#  cache: cached_s3_client
+  cache: proxy
   driver: "gd"
-  webp:
-    generate: true
+#  webp:
+#    generate: true
 
   filter_sets:
     entry_thumb:
@@ -25,7 +25,7 @@ liip_imagine:
   loaders:
     local_images:
       flysystem:
-        filesystem_service: League\Flysystem\Filesystem
+        filesystem_service: oneup_flysystem.public_uploads_filesystem_filesystem
 
   data_loader: local_images
 
@@ -33,9 +33,9 @@ liip_imagine:
     entry_thumb:
       flysystem:
         filesystem_service: oneup_flysystem.public_uploads_filesystem_filesystem
-        root_url:           '%uploads_base_url%'
-        cache_prefix:       media/cache
-        visibility:         public
+        root_url: '%uploads_base_url%'
+        cache_prefix: media/cache
+        visibility: public
 
     avatar_thumb:
       flysystem:

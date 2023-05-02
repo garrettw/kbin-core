@@ -83,21 +83,30 @@ services:
           secret: '%amazon.s3.secret%'
         proxies: [ 'https://media.karab.in' ]
 
-  #  kbin.imagine.cache.resolver.amazon_s3:
-  #    class: Liip\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
-  #    arguments:
-  #      - "@kbin.s3_client"
-  #      - '%amazon.s3.bucket%'
-  #      - 'private'
-  #
-  #  kbin.imagine.psr_cache.resolver.amazon_s3.cache:
-  #    class: Liip\ImagineBundle\Imagine\Cache\Resolver\PsrCacheResolver
-  #    arguments:
-  #      - "@cache.app"
-  #      - "@kbin.imagine.cache.resolver.amazon_s3"
-  #      - { prefix: "amazon_s3" }
-  #    tags:
-  #      - { name: "liip_imagine.cache.resolver", resolver: "cached_s3_client" }
+  kbin.thumb_s3_client:
+    class: Aws\S3\S3Client
+    factory: [ Aws\S3\S3Client, factory ]
+    arguments:
+      - credentials: { key: "%amazon.s3.key%", secret: "%amazon.s3.secret%" }
+        region: "%amazon.s3.region%"
+        version: "%amazon.s3.version%"
+
+  kbin.imagine.cache.resolver.aws_s3_resolver:
+    class: Liip\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
+    arguments:
+      - "@kbin.thumb_s3_client"
+      - "%amazon.s3.bucket%"
+      - null
+    tags:
+      - { name: "liip_imagine.cache.resolver", resolver: "aws_s3_resolver" }
+
+  kbin.imagine.cache.resolver.proxy:
+    class: Liip\ImagineBundle\Imagine\Cache\Resolver\ProxyResolver
+    arguments:
+      - "@kbin.imagine.cache.resolver.aws_s3_resolver"
+      - [ "/" ]
+    tags:
+      - { name: "liip_imagine.cache.resolver", resolver: "proxy" }
 
   _instanceof:
     League\CommonMark\Inline\Parser\InlineParserInterface:

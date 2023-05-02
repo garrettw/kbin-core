@@ -1,8 +1,8 @@
 liip_imagine:
   cache: proxy
   driver: "gd"
-#  webp:
-#    generate: true
+  webp:
+    generate: true
 
   filter_sets:
     entry_thumb:

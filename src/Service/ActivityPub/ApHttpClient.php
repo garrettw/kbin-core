@@ -42,31 +42,21 @@ class ApHttpClient
 
     public function getActivityObject(string $url, bool $decoded = true): array|string|null
     {
-        $resp = $this->cache->get('ap_'.hash('sha256', $url), function (ItemInterface $item) use ($url) {
-            $this->logger->info("ApHttpClient:getActivityObject:url: {$url}");
+        $this->logger->info("ApHttpClient:getActivityObject:url: {$url}");
 
 
-            $client = new CurlHttpClient();
-            $r = $client->request('GET', $url, [
-                'max_duration' => self::TIMEOUT,
-                'timeout' => self::TIMEOUT,
-                'headers' => $this->getInstanceHeaders($url),
-            ]);
+        $client = new CurlHttpClient();
+        $r = $client->request('GET', $url, [
+            'max_duration' => self::TIMEOUT,
+            'timeout' => self::TIMEOUT,
+            'headers' => $this->getInstanceHeaders($url),
+        ]);
 
-            if (!str_starts_with((string)$r->getStatusCode(), '2')) {
-                throw new InvalidApPostException("Get fail: {$url}, ".$r->getContent(false));
-            }
-
-            $item->expiresAt(new \DateTime('+1 hour'));
-
-            return $r->getContent();
-        });
-
-        if (!$resp) {
-            return null;
+        if (!str_starts_with((string)$r->getStatusCode(), '2')) {
+            throw new InvalidApPostException("Get fail: {$url}, ".$r->getContent(false));
         }
 
-        return $decoded ? json_decode($resp, true) : $resp;
+        return $decoded ? json_decode($r->getContent(), true) : $r->getContent();
     }
 
     public function getInboxUrl(string $apProfileId): string
@@ -78,48 +68,39 @@ class ApHttpClient
 
     public function getActorObject(string $apProfileId): ?array
     {
-        $resp = $this->cache->get(
-            'ap_'.hash('sha256', $apProfileId),
-            function (ItemInterface $item) use ($apProfileId) {
-                $this->logger->info("ApHttpClient:getActorObject:url: {$apProfileId}");
+        $this->logger->info("ApHttpClient:getActorObject:url: {$apProfileId}");
 
-                try {
-                    $client = new CurlHttpClient();
-                    $r = $client->request('GET', $apProfileId, [
-                        'max_duration' => self::TIMEOUT,
-                        'timeout' => self::TIMEOUT,
-                        'headers' => $this->getInstanceHeaders($apProfileId),
-                    ]);
-                    if (str_starts_with((string)$r->getStatusCode(), '4')) {
-                        if ($user = $this->userRepository->findOneByApProfileId($apProfileId)) {
-                            $user->apDeletedAt = new \DateTime();
-                            $this->userRepository->save($user, true);
-                        }
-                        if ($magazine = $this->magazineRepository->findOneByApProfileId($apProfileId)) {
-                            $magazine->apDeletedAt = new \DateTime();
-                            $this->userRepository->save($user, true);
-                        }
-                    }
-                } catch (\Exception $e) {
-                    if ($user = $this->userRepository->findOneByApProfileId($apProfileId)) {
-                        $user->apTimeoutAt = new \DateTime();
-                        $this->userRepository->save($user, true);
-                    }
-                    if ($magazine = $this->magazineRepository->findOneByApProfileId($apProfileId)) {
-                        $magazine->apTimeoutAt = new \DateTime();
-                        $this->magazineRepository->save($user, true);
-                    }
-
-                    throw new InvalidApPostException("Get fail: {$apProfileId}, ".$r->getContent(false));
+        try {
+            $client = new CurlHttpClient();
+            $r = $client->request('GET', $apProfileId, [
+                'max_duration' => self::TIMEOUT,
+                'timeout' => self::TIMEOUT,
+                'headers' => $this->getInstanceHeaders($apProfileId),
+            ]);
+            if (str_starts_with((string)$r->getStatusCode(), '4')) {
+                if ($user = $this->userRepository->findOneByApProfileId($apProfileId)) {
+                    $user->apDeletedAt = new \DateTime();
+                    $this->userRepository->save($user, true);
                 }
-
-                $item->expiresAt(new \DateTime('+1 hour'));
-
-                return $r->getContent();
+                if ($magazine = $this->magazineRepository->findOneByApProfileId($apProfileId)) {
+                    $magazine->apDeletedAt = new \DateTime();
+                    $this->userRepository->save($user, true);
+                }
             }
-        );
+        } catch (\Exception $e) {
+            if ($user = $this->userRepository->findOneByApProfileId($apProfileId)) {
+                $user->apTimeoutAt = new \DateTime();
+                $this->userRepository->save($user, true);
+            }
+            if ($magazine = $this->magazineRepository->findOneByApProfileId($apProfileId)) {
+                $magazine->apTimeoutAt = new \DateTime();
+                $this->magazineRepository->save($user, true);
+            }
 
-        return $resp ? json_decode($resp, true) : null;
+            throw new InvalidApPostException("Get fail: {$apProfileId}, ".$r->getContent(false));
+        }
+
+        return $r->getContent() ? json_decode($r->getContent(), true) : null;
     }
 
     public function post(string $url, User|Magazine $actor, ?array $body = null): void

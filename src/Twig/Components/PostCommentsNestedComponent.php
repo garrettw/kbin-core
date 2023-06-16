@@ -38,7 +38,7 @@ final class PostCommentsNestedComponent
         return $cache->get(
             "post_comments_nested_{$commentId}_{$userId}_{$this->view}_{$this->requestStack->getCurrentRequest()?->getLocale()}",
             function (ItemInterface $item) use ($commentId, $userId, $postId) {
-                $item->expiresAfter(3600);
+                $item->expiresAfter(0);
                 $item->tag(['post_comments_user_'.$userId]);
                 $item->tag(['post_comment_'.$commentId]);
                 $item->tag(['post_'.$postId]);

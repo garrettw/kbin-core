@@ -33,7 +33,7 @@ final class PostCommentsPreviewComponent
         return $cache->get(
             "post_comment_preview_{$postId}_{$userId}_{$this->requestStack->getCurrentRequest()?->getLocale()}",
             function (ItemInterface $item) use ($postId, $userId, $attributes) {
-                $item->expiresAfter(3600);
+                $item->expiresAfter(0);
                 $item->tag(['post_comments_user_'.$userId]);
                 $item->tag(['post_'.$postId]);
 

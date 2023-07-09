@@ -34,6 +34,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "REQUEST_METHOD=GET SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping cgi-fcgi -bind -connect localhost:9000 || exit 1"]
     volumes:
+      - ../../:/var/www/kbin
       - ./storage/media:/var/www/kbin/public/media
     env_file:
       - .env

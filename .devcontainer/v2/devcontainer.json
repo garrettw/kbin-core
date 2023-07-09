@@ -1,0 +1,52 @@
+// https://aka.ms/devcontainer.json
+{
+    "name": "Existing Docker Compose (Dev) v2",
+    "dockerComposeFile": [
+        "../docker/v2/docker-compose.yml",
+        "../docker/v2/docker-compose.prod.yml"
+    ],
+    "service": "php",
+    "runServices": [
+        "www",
+        "messenger",
+        "messenger_ap"
+    ],
+    "workspaceFolder": "/var/www/kbin",
+    "initializeCommand": {
+        "env": "cp .env.docker.example .env",
+        "env2": "cp .env.docker.example docker/v2/.env",
+        "storage": "mkdir -p docker/v2/storage/media docker/v2/storage/caddy_config docker/v2/storage/caddy_data",
+        "chown": "chown 1000:82 docker/v2/storage/media docker/v2/storage/caddy_config docker/v2/storage/caddy_data"
+    },
+    "remoteUser": "kbin",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "formulahendry.auto-complete-tag",
+                "alefragnani.bookmarks",
+                "predrag-nikolic.php-class-helper",
+                "ikappas.composer",
+                "mikestead.dotenv",
+                "eamodio.gitlens",
+                "nhoizey.gremlins",
+                "oderwat.indent-rainbow",
+                "davidanson.vscode-markdownlint",
+                "xdebug.php-pack",
+                "neilbrayfield.php-docblocker",
+                "bmewburn.vscode-intelephense-client",
+                "mehedidracula.php-namespace-resolver",
+                "levacic.vscode-phpstan",
+                "ckolkman.vscode-postgres",
+                "rohinivsenthil.rabbitrace",
+                "davidsekar.redis-xplorer",
+                "nadim-vscode.twig-code-snippets",
+                "pflannery.vscode-versionlens",
+                "redhat.vscode-yaml",
+                "sonarsource.sonarlint-vscode"
+            ],
+            "settings": {}
+        }
+    }
+    // "postCreateCommand": "chown -R 1000:1000 /var/www/html",
+    // "forwardPorts": [],
+}

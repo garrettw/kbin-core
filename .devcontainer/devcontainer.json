@@ -2,7 +2,7 @@
 {
     "name": "Existing Docker Compose (Dev)",
     "dockerComposeFile": [
-        "../docker-compose.norabbit.yml",
+        "../docker-compose.devcontainer.yml",
         "../docker-compose.override.yml"
     ],
     "service": "php",
@@ -10,7 +10,7 @@
         "caddy",
         "redis",
         // "rabbitmq",
-        "messenger_kbin",
+        // "messenger_kbin",
         // "messenger_ap",
         "database"
     ],

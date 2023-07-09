@@ -83,33 +83,33 @@ services:
   #     - 5672:5672
   #     - 15672:15672
 
-  messenger_kbin:
-    user: "82:82"
-    build:
-      context: .
-      target: symfony_messenger
-    command: 'sh -c "php bin/console messenger:consume async --time-limit=3600"'
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-kbin}:${POSTGRES_PASSWORD:-ChangeMe}@database:5432/${POSTGRES_DB:-kbin}?serverVersion=${POSTGRES_VERSION:-13}&charset=${POSTGRES_CHARSET:-utf8}
-      MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
-      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-kbin.localhost}/.well-known/mercure
-      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-!ChangeThisRedisPass!}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-!ChangeThisRabbitPass!}
-      RABBITMQ_USER: ${RABBITMQ_USER:-kbin}
-    volumes:
-      - ./:/srv/app
-      - php_socket:/var/run/php
-    healthcheck:
-      interval: 20s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
-    restart: always
-    depends_on:
-      - php
+  # messenger_kbin:
+  #   user: "82:82"
+  #   build:
+  #     context: .
+  #     target: symfony_messenger
+  #   command: 'sh -c "php bin/console messenger:consume async --time-limit=3600"'
+  #   environment:
+  #     DATABASE_URL: postgresql://${POSTGRES_USER:-kbin}:${POSTGRES_PASSWORD:-ChangeMe}@database:5432/${POSTGRES_DB:-kbin}?serverVersion=${POSTGRES_VERSION:-13}&charset=${POSTGRES_CHARSET:-utf8}
+  #     MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
+  #     MERCURE_PUBLIC_URL: https://${SERVER_NAME:-kbin.localhost}/.well-known/mercure
+  #     MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     REDIS_PASSWORD: ${REDIS_PASSWORD:-!ChangeThisRedisPass!}
+  #     RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-!ChangeThisRabbitPass!}
+  #     RABBITMQ_USER: ${RABBITMQ_USER:-kbin}
+  #   volumes:
+  #     - ./:/srv/app
+  #     - php_socket:/var/run/php
+  #   healthcheck:
+  #     interval: 20s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 30s
+  #   restart: always
+  #   depends_on:
+  #     - php
 
   # messenger_ap:
   #   user: "82:82"

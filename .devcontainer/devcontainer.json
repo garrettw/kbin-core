@@ -8,7 +8,7 @@
     "service": "php",
     "runServices": [
         "caddy",
-        "redis",
+        // "redis",
         // "rabbitmq",
         // "messenger_kbin",
         // "messenger_ap",

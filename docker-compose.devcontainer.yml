@@ -63,12 +63,12 @@ services:
         published: ${HTTP3_PORT:-443}
         protocol: udp
 
-  redis:
-    image: redis:7.0.11-alpine
-    restart: always
-    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-!ChangeThisRedisPass!} --maxmemory-policy volatile-ttl
-    volumes:
-      - redis-data:/data
+  # redis:
+  #   image: redis:7.0.11-alpine
+  #   restart: always
+  #   command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-!ChangeThisRedisPass!} --maxmemory-policy volatile-ttl
+  #   volumes:
+  #     - redis-data:/data
 
   # rabbitmq:
   #   image: rabbitmq:3-management
@@ -165,5 +165,5 @@ volumes:
   caddy_data:
   caddy_config:
   db-data:
-  rabbitmq-data:
-  redis-data:
+  # rabbitmq-data:
+  # redis-data:

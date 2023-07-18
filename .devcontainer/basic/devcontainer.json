@@ -2,7 +2,7 @@
 {
     "name": "Basic PHP 8.2 Container",
     "image": "mcr.microsoft.com/devcontainers/php:0-8.2",
-    "postCreateCommand": "composer install",
+    // "postCreateCommand": "composer install",
     "customizations": {
         "vscode": {
             "extensions": [

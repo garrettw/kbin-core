@@ -1,4 +1,4 @@
-# [Choice] PHP version (use -bullseye variants on local arm64/Apple Silicon): 8-apache-bookworm, 8.2-apache-bookworm, 8.1-apache-bookworm, 8-apache-bullseye, 8.2-apache-bullseye, 8.1-apache-bullseye, 8.0-apache-bullseye, 8-apache-buster, 8.2-apache-buster, 8.1-apache-buster, 8.0-apache-buster
+# Upstream PHP image version (use -bullseye variants on local arm64/Apple Silicon)
 ARG VARIANT=8.2-apache-bookworm
 FROM php:${VARIANT}
 
@@ -17,11 +17,22 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 
 # Install package dependencies for PHP extensions
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends zlib1g-dev libpng-dev libicu-dev librabbitmq-dev
+    && apt-get -y install --no-install-recommends libicu-dev libpng-dev librabbitmq-dev libzip-dev zlib1g-dev
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd intl \
+    && docker-php-ext-install -j$(nproc) gd intl opcache sysvsem zip \
     && pecl install amqp \
+    && pecl install apcu \
     && pecl install redis \
-    && docker-php-ext-enable amqp redis
+    && docker-php-ext-enable amqp apcu redis
+
+# Allow to use development versions of Symfony
+ARG STABILITY="stable"
+ENV STABILITY ${STABILITY}
+
+# Allow to select Symfony version
+ARG SYMFONY_VERSION=""
+ENV SYMFONY_VERSION ${SYMFONY_VERSION}
+
+ENV APP_ENV=prod

@@ -15,13 +15,13 @@ RUN curl -sSL https://getcomposer.org/installer | php \
     && chmod +x composer.phar \
     && mv composer.phar /usr/local/bin/composer
 
-# [Optional] Uncomment this section to install additional packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Install package dependencies for PHP extensions
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends zlib1g-dev libpng-dev libicu-dev librabbitmq-dev
 
-# Install required PHP extensions
+# Install PHP extensions
 RUN docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd intl \
     && pecl install amqp \
     && pecl install redis \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable amqp redis

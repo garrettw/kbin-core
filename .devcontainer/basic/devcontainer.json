@@ -1,11 +1,34 @@
 // https://aka.ms/devcontainer.json
 {
     "name": "Basic PHP 8.2 Container",
-    "image": "mcr.microsoft.com/devcontainers/php:0-8.2",
-    // "postCreateCommand": "composer install",
+    "build": {
+        "dockerfile": "./Dockerfile",
+        "context": "."
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": "true",
+            "username": "vscode",
+            "userUid": "1000",
+            "userGid": "1000",
+            "upgradePackages": "true"
+        },
+        "./local-features/apache-config": "latest",
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": "false"
+        }
+    },
+    "overrideFeatureInstallOrder": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ],
     "customizations": {
         "vscode": {
             "extensions": [
+                "mrmlnc.vscode-apache",
                 "predrag-nikolic.php-class-helper",
                 "ikappas.composer",
                 "mikestead.dotenv",
@@ -19,7 +42,18 @@
                 "pflannery.vscode-versionlens",
                 "redhat.vscode-yaml"
             ],
-            "settings": {}
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php"
+            }
         }
-    }
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [
+        8080
+    ],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)/public\" /var/www/html",
+
+    // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode"
 }

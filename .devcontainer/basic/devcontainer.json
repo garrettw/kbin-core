@@ -1,23 +1,8 @@
 // https://aka.ms/devcontainer.json
 {
-    "name": "Existing Docker Compose (Dev) (not working)",
-    "dockerComposeFile": [
-        "../docker-compose.devcontainer.yml",
-        "../docker-compose.override.yml"
-    ],
-    "service": "php",
-    "runServices": [
-        "caddy",
-        "redis",
-        // "rabbitmq",
-        // "messenger_kbin",
-        // "messenger_ap",
-        "database"
-    ],
-    "workspaceFolder": "/srv/app",
-    "initializeCommand": {
-        "env": "cp .env.example .env"
-    },
+    "name": "Basic PHP 8.2 Container",
+    "image": "mcr.microsoft.com/devcontainers/php:0-8.2",
+    "postCreateCommand": "composer install",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -36,15 +21,14 @@
                 "mehedidracula.php-namespace-resolver",
                 "levacic.vscode-phpstan",
                 "ckolkman.vscode-postgres",
-                // "rohinivsenthil.rabbitrace",
+                "rohinivsenthil.rabbitrace",
                 "davidsekar.redis-xplorer",
                 "nadim-vscode.twig-code-snippets",
                 "pflannery.vscode-versionlens",
-                "redhat.vscode-yaml"
+                "redhat.vscode-yaml",
+                "sonarsource.sonarlint-vscode"
             ],
             "settings": {}
         }
     }
-    // "postCreateCommand": "chown -R 1000:1000 /var/www/html",
-    // "forwardPorts": [],
 }

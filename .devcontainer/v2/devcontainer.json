@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-    "name": "Existing Docker Compose (Dev) v2",
+    "name": "Existing Docker Compose (Dev) v2 (not working)",
     "dockerComposeFile": [
         "../docker/v2/docker-compose.yml",
         "../docker/v2/docker-compose.prod.yml"

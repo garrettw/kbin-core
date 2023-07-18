@@ -1,6 +1,12 @@
+#syntax=docker/dockerfile:1.4
+
 # Upstream PHP image version (use -bullseye variants on local arm64/Apple Silicon)
 ARG VARIANT=8.2-apache-bookworm
-FROM php:${VARIANT} AS app_php
+FROM php:${VARIANT} AS app_php_dev
+
+# Install php extensions, by docker-php-extension-installer
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions amqp apcu gd intl opcache pgsql pdo_pgsql redis
 
 # Install xdebug
 RUN yes | pecl install xdebug \
@@ -10,22 +16,12 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.client_port = 9000" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && rm -rf /tmp/pear
 
+RUN cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+COPY --link docker/php/conf.d/app.ini $PHP_INI_DIR/conf.d/
+COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
+
 # Install composer
-RUN curl -sSL https://getcomposer.org/installer | php \
-    && chmod +x composer.phar \
-    && mv composer.phar /usr/local/bin/composer
-
-# Install package dependencies for PHP extensions
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends libicu-dev libpng-dev librabbitmq-dev libzip-dev zlib1g-dev
-
-# Install PHP extensions
-RUN docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd intl opcache sysvsem zip \
-    && pecl install amqp \
-    && pecl install apcu \
-    && pecl install redis \
-    && docker-php-ext-enable amqp apcu redis
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Allow to use development versions of Symfony
 ARG STABILITY="stable"
@@ -35,4 +31,8 @@ ENV STABILITY ${STABILITY}
 ARG SYMFONY_VERSION=""
 ENV SYMFONY_VERSION ${SYMFONY_VERSION}
 
-ENV APP_ENV=prod
+ENV APP_ENV=dev \
+    KBIN_HOME=/var/www/html
+
+# Copy repository
+COPY --link ./ $KBIN_HOME

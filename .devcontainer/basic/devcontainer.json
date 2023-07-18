@@ -1,10 +1,9 @@
 // https://aka.ms/devcontainer.json
 {
     "name": "PHP 8.2 + Node LTS + Git + Apache",
-    "build": {
-        "dockerfile": "./Dockerfile",
-        "context": "."
-    },
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "php",
+    "workspaceFolder": "/var/www/html",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": "true",
@@ -47,7 +46,7 @@
         8080
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)/public\" /var/www/html",
+    // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)/public\" /var/www/html && chown -R 1000:1000 /var/www/html",
 
     // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode"

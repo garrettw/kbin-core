@@ -1,6 +1,6 @@
 # Upstream PHP image version (use -bullseye variants on local arm64/Apple Silicon)
 ARG VARIANT=8.2-apache-bookworm
-FROM php:${VARIANT}
+FROM php:${VARIANT} AS app_php
 
 # Install xdebug
 RUN yes | pecl install xdebug \

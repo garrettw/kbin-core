@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.4
 
 # Upstream PHP image version (use -bullseye variants on local arm64/Apple Silicon)
 ARG VARIANT=8.2-apache-bookworm

@@ -1,37 +1,33 @@
 // https://aka.ms/devcontainer.json
 {
-    "name": "Existing Docker Compose (Dev) v2 (not working)",
-    "dockerComposeFile": [
-        "../docker/v2/docker-compose.yml",
-        "../docker/v2/docker-compose.prod.yml"
-    ],
+    "name": "Existing Docker Compose (Dev) v2 (WIP)",
+    "dockerComposeFile": "docker-compose.yml",
     "service": "php",
     "runServices": [
         "www",
         "messenger",
         "messenger_ap"
     ],
-    "workspaceFolder": "/var/www/kbin",
+    "workspaceFolder": "/var/www/html",
     "initializeCommand": {
-        "env": "cp .env.docker.example .env",
-        "env2": "cp .env.docker.example docker/v2/.env",
+        "env": "cp .devcontainer/v2/.env .env && cp .devcontainer/v2/.env docker/v2/.env",
         "storage": "mkdir -p docker/v2/storage/media docker/v2/storage/caddy_config docker/v2/storage/caddy_data",
         "chown": "chown 1000:82 docker/v2/storage/media docker/v2/storage/caddy_config docker/v2/storage/caddy_data"
     },
-    "remoteUser": "kbin",
     "customizations": {
         "vscode": {
             "extensions": [
-                "formulahendry.auto-complete-tag",
-                "alefragnani.bookmarks",
+                // "formulahendry.auto-complete-tag",
+                // "alefragnani.bookmarks",
                 "predrag-nikolic.php-class-helper",
                 "ikappas.composer",
+                "ms-azuretools.vscode-docker",
                 "mikestead.dotenv",
-                "eamodio.gitlens",
-                "nhoizey.gremlins",
-                "oderwat.indent-rainbow",
+                // "eamodio.gitlens",
+                // "nhoizey.gremlins",
+                // "oderwat.indent-rainbow",
                 "davidanson.vscode-markdownlint",
-                "xdebug.php-pack",
+                "xdebug.php-debug",
                 "neilbrayfield.php-docblocker",
                 "bmewburn.vscode-intelephense-client",
                 "mehedidracula.php-namespace-resolver",
@@ -41,12 +37,18 @@
                 "davidsekar.redis-xplorer",
                 "nadim-vscode.twig-code-snippets",
                 "pflannery.vscode-versionlens",
-                "redhat.vscode-yaml",
-                "sonarsource.sonarlint-vscode"
+                "redhat.vscode-yaml"
             ],
-            "settings": {}
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php"
+            }
         }
-    }
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [
+        8080
+    ],
     // "postCreateCommand": "chown -R 1000:1000 /var/www/html",
     // "forwardPorts": [],
+    "remoteUser": "vscode"
 }

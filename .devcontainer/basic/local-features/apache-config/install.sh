@@ -18,7 +18,9 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update && apt-get -y install --no-install-recommends lynx
 usermod -aG www-data ${USERNAME}
-sed -i -e "s/Listen 80/Listen 80\\nListen 8080/g" /etc/apache2/ports.conf
+sed -i -e "s/Listen 80/Listen 8080/g" /etc/apache2/ports.conf
+sed -i -e "s/80/8080/" /etc/apache2/sites-enabled/000-default.conf
+sed -i -e "s/DocumentRoot \\/var\\/www\\/html/DocumentRoot \\/var\\/www\\/html\\/public/" /etc/apache2/sites-enabled/000-default.conf
 apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 echo "Done!"

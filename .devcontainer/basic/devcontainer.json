@@ -46,8 +46,8 @@
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
     // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)/public\" /var/www/html && chown -R 1000:1000 /var/www/html",
-    "postCreateCommand": "cp .devcontainer/basic/.env .env && composer install --prefer-dist --no-progress && chmod +x bin/console && sync; sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)/public\" /var/www/html"
+    "postCreateCommand": "cp .devcontainer/basic/.env .env && composer install --prefer-dist --no-progress && chmod +x bin/console && sync; pwd",
 
     // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-    // "remoteUser": "vscode"
+    "remoteUser": "vscode"
 }
